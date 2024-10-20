@@ -1,4 +1,29 @@
 ---
+- name: install packages apt
+  ansible.builtin.apt:
+    pkg:
+      - net-tools
+      - iproute2
+      - iptables
+      - vim 
+      - git
+      - bash-completion
+      - tar
+      - ntp
+      - jq
+      - ipvsadm
+      - apt-transport-https 
+      - ca-certificates
+      - curl
+      - gpg
+    state: present 
+
+- name: enable ntp
+  ansible.builtin.systemd_service:
+    name: ntpd
+    state: started
+    enabled: true
+
 - name: test Swap
   ansible.builtin.shell: "swapon --show --noheadings | wc -l"
   register: swap_ret
@@ -42,4 +67,7 @@
     - name: net.bridge.bridge-nf-call-iptables
       value: 1
     - name: net.bridge.bridge-nf-call-ip6tables
-      value: 1  
+      value: 1
+
+- name: install containerd
+  ansible.builtin.include_tasks: containerd.yaml 
